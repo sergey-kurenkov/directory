@@ -1,7 +1,13 @@
 package internal
 
+type CommonManager struct {
+	Employee1 string
+	Employee2 string
+	Manager   string
+}
+
 type Directory interface {
-	FindClosestCommonManager(employee1, employee2 string) (*Manager, error)
+	FindClosestCommonManager(employee1, employee2 string) []CommonManager
 }
 
 func NewDirectory(top *OrgUnit) Directory {
@@ -19,6 +25,7 @@ type Manager struct {
 }
 
 type OrgUnit struct {
+	Name     string      `json:"org-unit-name"`
 	Manager  Manager     `json:"manager"`
 	Reports  []*Employee `json:"reports"`
 	OrgUnits []*OrgUnit  `json:"org-units"`

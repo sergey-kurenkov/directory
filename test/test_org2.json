@@ -1,0 +1,51 @@
+{
+	"manager": {"name": "Claire"},
+	"reports": [
+		{ "name": "Ann"},
+		{ "name": "Julia"}
+	],
+	"org-units": [
+		{
+			"manager": {"name": "Bob"},
+			"org-units": [
+				{
+					"manager": {"name": "Mark"},
+					"reports": [
+						{ "name": "A1"},
+						{ "name": "A2"}
+					]
+				},
+				{
+					"manager": {"name": "Paul"},
+					"reports": [
+						{ "name": "B1"},
+						{ "name": "B2"}
+					]
+				}
+			]
+		},
+		{
+			"manager": {"name": "Alice"},
+			"reports": [
+				{ "name": "Fred"},
+				{ "name": "Donald"}
+			],
+			"org-units": [
+				{
+					"manager": {"name": "Boris"},
+					"reports": [
+						{ "name": "C1"},
+						{ "name": "C2"}
+					]
+				},
+				{
+					"manager": {"name": "Pablo"},
+					"reports": [
+						{ "name": "D1"},
+						{ "name": "D2"}
+					]
+				}
+			]
+		}
+	]	
+}

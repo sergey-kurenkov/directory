@@ -6,7 +6,7 @@ test:
 	go test -count=1 ./internal
 
 build:
-	go build ./cmd/dir_cmd_line
+	go build ./cmd/query_dir
 
 testfv:
 	go test -failfast -v -count=1 ./internal
