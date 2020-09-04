@@ -1,4 +1,4 @@
-.PHONY: all test testfv build run-linter demo
+.PHONY: all test testfvr build run-linter demo
 
 all: build
 
@@ -8,8 +8,8 @@ build:
 test:
 	go test -count=1 ./internal
 
-testfv:
-	go test -failfast -v -count=1 ./internal
+testfvr:
+	go test -race -failfast -v -count=1 ./internal
 
 run-linter:
 	golangci-lint run ./internal
