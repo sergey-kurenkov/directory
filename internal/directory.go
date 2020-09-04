@@ -26,7 +26,7 @@ type Manager struct {
 }
 
 type OrgUnit struct {
-	Name     string      `json:"org-unit-name"`
+	Name     string      `json:"org-unit"`
 	Manager  Manager     `json:"manager"`
 	Reports  []*Employee `json:"reports"`
 	OrgUnits []*OrgUnit  `json:"org-units"`

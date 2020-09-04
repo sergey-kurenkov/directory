@@ -46,7 +46,7 @@ func main() {
 		os.Exit(1)
 	}
 	for _, commonManager := range commonManagers {
-		fmt.Printf("employee #1: %s, employee #2: %s, common manager: %s\n",
+		fmt.Printf("employee: \"%s\", employee: \"%s\", manager: \"%s\"\n",
 			commonManager.Employee1, commonManager.Employee2, commonManager.Manager)
 	}
 }

@@ -113,6 +113,9 @@ func TestTwoOrgUnits(t *testing.T) {
 	assert.Equal(t, "/Bureaucr.at/department 2/Bill", cm[0].Employee1)
 	assert.Equal(t, "/Bureaucr.at/department 1/Bill", cm[0].Employee2)
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
+
+	cm = dir.FindClosestCommonManager("John", "John")
+	require.Equal(t, 3, len(cm))
 }
 
 /*
