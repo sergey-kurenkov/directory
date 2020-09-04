@@ -1,12 +1,12 @@
 .PHONY: all test testfv build run-linter demo
 
-all: test build
-
-test:
-	go test -count=1 ./internal
+all: build
 
 build:
 	go build ./cmd/query_dir
+
+test:
+	go test -count=1 ./internal
 
 testfv:
 	go test -failfast -v -count=1 ./internal
