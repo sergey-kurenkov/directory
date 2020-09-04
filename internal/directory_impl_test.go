@@ -29,7 +29,7 @@ func checkTwoEmployes(t *testing.T, employee1, employee2 string, cm CommonManage
 	received[cm.Employee1]++
 	received[cm.Employee2]++
 
-	assert.True(t, reflect.DeepEqual(expected,received), expected,received)
+	assert.True(t, reflect.DeepEqual(expected, received), expected, received)
 }
 
 func makeCommonManagerMap(cm []CommonManager) map[CommonManager]int {
@@ -37,9 +37,9 @@ func makeCommonManagerMap(cm []CommonManager) map[CommonManager]int {
 	for _, m := range cm {
 		result[m]++
 	}
+
 	return result
 }
-
 
 func TestTwoOrgUnits(t *testing.T) {
 	dir := NewDirectory(
@@ -125,18 +125,19 @@ func TestTwoOrgUnits(t *testing.T) {
 
 	cm = dir.FindClosestCommonManager("John", "John")
 	require.Equal(t, 3, len(cm))
+
 	expected := makeCommonManagerMap([]CommonManager{
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/John",
 			Employee2: "/Bureaucr.at/John",
 			Manager:   "/Bureaucr.at/Claire",
 		},
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/John",
 			Employee2: "/Bureaucr.at/department 1/John",
 			Manager:   "/Bureaucr.at/Claire",
 		},
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/John",
 			Employee2: "/Bureaucr.at/department 1/John",
 			Manager:   "/Bureaucr.at/Claire",
@@ -203,8 +204,9 @@ func TestThreeOrgUnits(t *testing.T) {
 
 	cm := dir.FindClosestCommonManager("John", "Elsa")
 	require.Equal(t, 1, len(cm))
+
 	expected := makeCommonManagerMap([]CommonManager{
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/department 1/group 1.1/John",
 			Employee2: "/Bureaucr.at/department 1/group 1.1/Elsa",
 			Manager:   "/Bureaucr.at/department 1/group 1.1/Mark",
@@ -215,8 +217,9 @@ func TestThreeOrgUnits(t *testing.T) {
 
 	cm = dir.FindClosestCommonManager("John", "Ann")
 	require.Equal(t, 1, len(cm))
+
 	expected = makeCommonManagerMap([]CommonManager{
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/department 1/group 1.1/John",
 			Employee2: "/Bureaucr.at/department 2/group 2.2/Ann",
 			Manager:   "/Bureaucr.at/Claire",
@@ -227,8 +230,9 @@ func TestThreeOrgUnits(t *testing.T) {
 
 	cm = dir.FindClosestCommonManager("John", "Paul")
 	require.Equal(t, 1, len(cm))
+
 	expected = makeCommonManagerMap([]CommonManager{
-		CommonManager{
+		{
 			Employee1: "/Bureaucr.at/department 1/group 1.1/John",
 			Employee2: "/Bureaucr.at/department 1/group 1.2/Paul",
 			Manager:   "/Bureaucr.at/department 1/Bob",
