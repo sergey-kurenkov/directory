@@ -1,0 +1,71 @@
+{
+	"org-unit":    "Bureaucr.at",
+	"manager": {"name": "Claire"},
+	"reports": [
+		{ "name": "Ann"},
+		{ "name": "Julia"},
+		{ "name": "John"},
+		{ "name": "John"}
+	],
+	"org-units": [
+		{
+			"org-unit":    "department 1",
+			"manager": {"name": "Bob"},
+			"reports": [
+				{ "name": "Bill"},
+				{ "name": "John"},
+				{ "name": "Joseph"},
+				{ "name": "Kate"},
+				{ "name": "Monica"},
+				{ "name": "Jane"},
+				{ "name": "Jane"}
+			],
+			"org-units": [
+				{
+					"org-unit":    "group 1.1",
+					"manager": {"name": "Ben"},
+					"reports": [
+						{ "name": "Charlie"},
+						{ "name": "Boris"}
+					]
+				},
+				{
+					"org-unit":    "group 1.2",
+					"manager": {"name": "Mike"},
+					"reports": [
+						{ "name": "Helen"},
+						{ "name": "Mia"}
+					]
+				}
+			]
+		},
+		{
+			"org-unit":    "department 2",
+			"manager": {"name": "Alice"},
+			"reports": [
+				{ "name": "Fred"},
+				{ "name": "Donald"},
+				{ "name": "Bill"},
+				{ "name": "Monica"}
+			],
+			"org-units": [
+				{
+					"org-unit":    "group 2.1",
+					"manager": {"name": "Ian"},
+					"reports": [
+						{ "name": "Kirk"},
+						{ "name": "Thomas"}
+					]
+				},
+				{
+					"org-unit":    "group 2.2",
+					"manager": {"name": "Mike"},
+					"reports": [
+						{ "name": "Helen"},
+						{ "name": "Kirk"}
+					]
+				}
+			]
+		}
+	]	
+}

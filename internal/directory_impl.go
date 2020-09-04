@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	uuid "github.com/satori/go.uuid"
 	"strings"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type directoryImpl struct {
@@ -22,10 +23,9 @@ func newDirectory(top *OrgUnit) Directory {
 			employee.UUID = uuid.NewV4()
 		}
 
-		for _, orgUnit := range currentItem.OrgUnits {
-			items = append(items, orgUnit)
-		}
+		items = append(items, currentItem.OrgUnits...)
 	}
+
 	return &directoryImpl{top: top}
 }
 
@@ -37,10 +37,11 @@ func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2
 
 	commonManagers := []CommonManager{}
 
-	duplicateKeys := duplicateKeys{}
+	duplKeys := duplicateKeys{}
+
 	for _, e1 := range allEmployees1 {
 		for _, e2 := range allEmployees2 {
-			cm := this.findCommonManager(&e1, &e2, duplicateKeys)
+			cm := this.findCommonManager(e1, e2, duplKeys)
 			if cm != nil {
 				commonManagers = append(commonManagers, *cm)
 			}
@@ -57,8 +58,8 @@ type orgUnit2Traverse struct {
 	parentOrgUnits orgUnits
 }
 
-func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
-	result := []foundEmployee{}
+func (this *directoryImpl) findEmployee(employeeName string) []*foundEmployee {
+	result := []*foundEmployee{}
 	items := []*orgUnit2Traverse{{this.top, orgUnits{}}}
 
 	for len(items) > 0 {
@@ -69,13 +70,13 @@ func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
 			e := foundEmployee{
 				managersOrgUnits: orgUnits{},
 				ownUnit:          orgUnits{},
-				employeeName: currentItem.currentOrgUnit.Manager.Name,
-				employeeUUID: currentItem.currentOrgUnit.Manager.UUID,
+				employeeName:     currentItem.currentOrgUnit.Manager.Name,
+				employeeUUID:     currentItem.currentOrgUnit.Manager.UUID,
 			}
 			e.managersOrgUnits = append(e.managersOrgUnits, currentItem.parentOrgUnits...)
 			e.ownUnit = append(e.ownUnit, currentItem.parentOrgUnits...)
 			e.ownUnit = append(e.ownUnit, currentItem.currentOrgUnit)
-			result = append(result, e)
+			result = append(result, &e)
 		}
 
 		currentItem.parentOrgUnits = append(currentItem.parentOrgUnits, currentItem.currentOrgUnit)
@@ -85,11 +86,11 @@ func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
 					managersOrgUnits: orgUnits{},
 					ownUnit:          orgUnits{},
 					employeeName:     employeeName,
-					employeeUUID: employee.UUID,
+					employeeUUID:     employee.UUID,
 				}
 				e.managersOrgUnits = append(e.managersOrgUnits, currentItem.parentOrgUnits...)
 				e.ownUnit = append(e.ownUnit, currentItem.parentOrgUnits...)
-				result = append(result, e)
+				result = append(result, &e)
 			}
 		}
 
@@ -101,8 +102,7 @@ func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
 	return result
 }
 
-func (this *directoryImpl) findCommonManager(e1 *foundEmployee, e2 *foundEmployee,
-	duplicateKeys duplicateKeys) *CommonManager {
+func (this *directoryImpl) findCommonManager(e1, e2 *foundEmployee, duplicateKeys duplicateKeys) *CommonManager {
 	maxLen := len(e1.managersOrgUnits)
 
 	if len(e2.managersOrgUnits) < maxLen {
@@ -123,6 +123,7 @@ func (this *directoryImpl) findCommonManager(e1 *foundEmployee, e2 *foundEmploye
 			if i == 0 {
 				return nil
 			}
+
 			break
 		}
 	}
@@ -130,7 +131,7 @@ func (this *directoryImpl) findCommonManager(e1 *foundEmployee, e2 *foundEmploye
 	commonManager := &CommonManager{
 		Employee1: e1.makeFullEmployeeName(),
 		Employee2: e2.makeFullEmployeeName(),
-		Manager:   e1.makeManagerName(i-1),
+		Manager:   e1.makeManagerName(i - 1),
 	}
 
 	const pattern4Key = "%s:%s"
@@ -151,7 +152,7 @@ type foundEmployee struct {
 	managersOrgUnits orgUnits
 	ownUnit          orgUnits
 	employeeName     string
-	employeeUUID 	 uuid.UUID
+	employeeUUID     uuid.UUID
 }
 
 func (this *foundEmployee) makeFullEmployeeName() string {
@@ -173,6 +174,7 @@ func (this *foundEmployee) makeManagerName(maxIndex int) string {
 
 	for i := 0; i <= maxIndex; i++ {
 		orgUnit := this.managersOrgUnits[i]
+
 		fullName.WriteString("/")
 		fullName.WriteString(orgUnit.Name)
 	}

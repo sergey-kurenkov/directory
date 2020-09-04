@@ -17,7 +17,7 @@ func NewDirectory(top *OrgUnit) Directory {
 }
 
 type Employee struct {
-	Name string `json:"name"`
+	Name string    `json:"name"`
 	UUID uuid.UUID `json:"-"`
 }
 

@@ -1,8 +1,9 @@
 package internal
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 import "github.com/stretchr/testify/assert"
 

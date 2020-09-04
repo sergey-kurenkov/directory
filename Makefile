@@ -52,3 +52,15 @@ demo: build
 	@echo "Finding a common manager for John and John:"
 	@./query_dir -file=./test/test_org2.json -first=John -second=John
 	@echo ""
+
+	@echo "Finding a common manager for Charlie and Mia:"
+	@./query_dir -file=./test/test_org3.json -first=Charlie -second=Mia
+	@echo ""
+
+	@echo "Finding a common manager for Charlie and Boris:"
+	@./query_dir -file=./test/test_org3.json -first=Charlie -second=Boris
+	@echo ""
+
+	@echo "Finding a common manager for Mike and Kirk:"
+	@./query_dir -file=./test/test_org3.json -first=Mike -second=Kirk
+	@echo ""

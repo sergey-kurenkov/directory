@@ -34,19 +34,26 @@ func main() {
 		os.Exit(1)
 	}
 	defer jsonFile.Close()
+
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var orgUnit internal.OrgUnit
-	json.Unmarshal(byteValue, &orgUnit)
+
+	err = json.Unmarshal(byteValue, &orgUnit)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "json unmarshalling error: %v\n", err)
+		os.Exit(1)
+	}
 
 	dir := internal.NewDirectory(&orgUnit)
 
-	commonManagers := dir.FindClosestCommonManager(*employee1, *employee2)
-	if len(commonManagers) == 0 {
+	items := dir.FindClosestCommonManager(*employee1, *employee2)
+	if len(items) == 0 {
 		fmt.Fprintf(os.Stderr, "no common manager\n")
 		os.Exit(1)
 	}
-	for _, commonManager := range commonManagers {
+
+	for _, item := range items {
 		fmt.Printf("employee: \"%s\", employee: \"%s\", manager: \"%s\"\n",
-			commonManager.Employee1, commonManager.Employee2, commonManager.Manager)
+			item.Employee1, item.Employee2, item.Manager)
 	}
 }
