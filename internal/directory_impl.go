@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"reflect"
+	uuid "github.com/satori/go.uuid"
 	"strings"
 )
 
@@ -10,7 +10,27 @@ type directoryImpl struct {
 	top *OrgUnit
 }
 
+func newDirectory(top *OrgUnit) Directory {
+	items := []*OrgUnit{top}
+
+	for len(items) > 0 {
+		currentItem := items[len(items)-1]
+		items = items[:len(items)-1]
+
+		currentItem.Manager.UUID = uuid.NewV4()
+		for _, employee := range currentItem.Reports {
+			employee.UUID = uuid.NewV4()
+		}
+
+		for _, orgUnit := range currentItem.OrgUnits {
+			items = append(items, orgUnit)
+		}
+	}
+	return &directoryImpl{top: top}
+}
+
 type duplicateKeys = map[string]struct{}
+
 func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2 string) []CommonManager {
 	allEmployees1 := this.findEmployee(employeeName1)
 	allEmployees2 := this.findEmployee(employeeName2)
@@ -49,7 +69,8 @@ func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
 			e := foundEmployee{
 				managersOrgUnits: orgUnits{},
 				ownUnit:          orgUnits{},
-				employeeName: employeeName,
+				employeeName: currentItem.currentOrgUnit.Manager.Name,
+				employeeUUID: currentItem.currentOrgUnit.Manager.UUID,
 			}
 			e.managersOrgUnits = append(e.managersOrgUnits, currentItem.parentOrgUnits...)
 			e.ownUnit = append(e.ownUnit, currentItem.parentOrgUnits...)
@@ -64,6 +85,7 @@ func (this *directoryImpl) findEmployee(employeeName string) []foundEmployee {
 					managersOrgUnits: orgUnits{},
 					ownUnit:          orgUnits{},
 					employeeName:     employeeName,
+					employeeUUID: employee.UUID,
 				}
 				e.managersOrgUnits = append(e.managersOrgUnits, currentItem.parentOrgUnits...)
 				e.ownUnit = append(e.ownUnit, currentItem.parentOrgUnits...)
@@ -91,7 +113,7 @@ func (this *directoryImpl) findCommonManager(e1 *foundEmployee, e2 *foundEmploye
 		return nil
 	}
 
-	if e1.employeeName == e2.employeeName && reflect.DeepEqual(e1.ownUnit, e2.ownUnit) {
+	if e1.employeeUUID == e2.employeeUUID {
 		return nil
 	}
 
@@ -114,12 +136,12 @@ func (this *directoryImpl) findCommonManager(e1 *foundEmployee, e2 *foundEmploye
 	const pattern4Key = "%s:%s"
 
 	if e1.employeeName == e2.employeeName {
-		if _, ok := duplicateKeys[fmt.Sprintf(pattern4Key, commonManager.Employee1, commonManager.Employee2)]; ok {
+		if _, ok := duplicateKeys[fmt.Sprintf(pattern4Key, e1.employeeUUID, e2.employeeUUID)]; ok {
 			return nil
 		}
 
-		duplicateKeys[fmt.Sprintf(pattern4Key, commonManager.Employee1, commonManager.Employee2)] = struct{}{}
-		duplicateKeys[fmt.Sprintf(pattern4Key, commonManager.Employee2, commonManager.Employee1)] = struct{}{}
+		duplicateKeys[fmt.Sprintf(pattern4Key, e1.employeeUUID, e2.employeeUUID)] = struct{}{}
+		duplicateKeys[fmt.Sprintf(pattern4Key, e2.employeeUUID, e1.employeeUUID)] = struct{}{}
 	}
 
 	return commonManager
@@ -129,6 +151,7 @@ type foundEmployee struct {
 	managersOrgUnits orgUnits
 	ownUnit          orgUnits
 	employeeName     string
+	employeeUUID 	 uuid.UUID
 }
 
 func (this *foundEmployee) makeFullEmployeeName() string {

@@ -1,5 +1,7 @@
 package internal
 
+import "github.com/satori/go.uuid"
+
 type CommonManager struct {
 	Employee1 string
 	Employee2 string
@@ -11,13 +13,12 @@ type Directory interface {
 }
 
 func NewDirectory(top *OrgUnit) Directory {
-	return &directoryImpl{
-		top: top,
-	}
+	return newDirectory(top)
 }
 
 type Employee struct {
 	Name string `json:"name"`
+	UUID uuid.UUID `json:"-"`
 }
 
 type Manager struct {
