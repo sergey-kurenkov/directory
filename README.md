@@ -10,5 +10,3 @@ The directory should be an in-memory structure.
 A Manager should link to Employees and not the other way around.
 We prefer that you to use Go, but accept other languages too.
 How the program takes its input and produces its output is up to you.
-
-You have 72 hours to work on the challenge. Please send us a tarball with a Git repo once you're happy with your solution and don't make it public. And remember, you decide what's important to show us :-)
