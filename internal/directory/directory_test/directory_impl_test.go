@@ -1,10 +1,12 @@
-package internal
+package directory_test
 
 import (
+	. "github.com/directory/internal/directory"
 	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 )
 import "github.com/stretchr/testify/assert"
 
@@ -16,7 +18,12 @@ func TestOnlyCEO(t *testing.T) {
 		})
 	assert.NotNil(t, dir)
 
-	cm := dir.FindClosestCommonManager("Claire", "Claire")
+	cm, err := dir.FindClosestCommonManager("Claire", "Claire")
+	require.NoError(t, err)
+	assert.Equal(t, 0, len(cm))
+
+	cm, err = dir.FindClosestCommonManager("Jonh", "Claire")
+	require.Error(t, err)
 	assert.Equal(t, 0, len(cm))
 }
 
@@ -82,48 +89,58 @@ func TestTwoOrgUnits(t *testing.T) {
 	assert.NotNil(t, dir)
 
 	var cm []CommonManager
+	var err error
 
-	cm = dir.FindClosestCommonManager("Ann", "Julia")
+	cm, err = dir.FindClosestCommonManager("Ann", "Julia")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/Ann", "/Bureaucr.at/Julia", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Bob", "Ann")
+	cm, err = dir.FindClosestCommonManager("Bob", "Ann")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 1/Bob", "/Bureaucr.at/Ann", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Joseph", "Kate")
+	cm, err = dir.FindClosestCommonManager("Joseph", "Kate")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 1/Joseph", "/Bureaucr.at/department 1/Kate", cm[0])
 	assert.Equal(t, "/Bureaucr.at/department 1/Bob", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Joseph", "Donald")
+	cm, err = dir.FindClosestCommonManager("Joseph", "Donald")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 1/Joseph", "/Bureaucr.at/department 2/Donald", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Joseph", "Ann")
+	cm, err = dir.FindClosestCommonManager("Joseph", "Ann")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 1/Joseph", "/Bureaucr.at/Ann", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Monica", "Monica")
+	cm, err = dir.FindClosestCommonManager("Monica", "Monica")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 2/Monica", "/Bureaucr.at/department 1/Monica", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Jane", "Jane")
+	cm, err = dir.FindClosestCommonManager("Jane", "Jane")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 1/Jane", "/Bureaucr.at/department 1/Jane", cm[0])
 	assert.Equal(t, "/Bureaucr.at/department 1/Bob", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("Bill", "Bill")
+	cm, err = dir.FindClosestCommonManager("Bill", "Bill")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 	checkTwoEmployes(t, "/Bureaucr.at/department 2/Bill", "/Bureaucr.at/department 1/Bill", cm[0])
 	assert.Equal(t, "/Bureaucr.at/Claire", cm[0].Manager)
 
-	cm = dir.FindClosestCommonManager("John", "John")
+	cm, err = dir.FindClosestCommonManager("John", "John")
+	require.NoError(t, err)
 	require.Equal(t, 3, len(cm))
 
 	expected := makeCommonManagerMap([]CommonManager{
@@ -202,7 +219,8 @@ func TestThreeOrgUnits(t *testing.T) {
 	)
 	assert.NotNil(t, dir)
 
-	cm := dir.FindClosestCommonManager("John", "Elsa")
+	cm, err := dir.FindClosestCommonManager("John", "Elsa")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 
 	expected := makeCommonManagerMap([]CommonManager{
@@ -215,7 +233,7 @@ func TestThreeOrgUnits(t *testing.T) {
 	received := makeCommonManagerMap(cm)
 	assert.True(t, reflect.DeepEqual(expected, received), expected, received)
 
-	cm = dir.FindClosestCommonManager("John", "Ann")
+	cm , err= dir.FindClosestCommonManager("John", "Ann")
 	require.Equal(t, 1, len(cm))
 
 	expected = makeCommonManagerMap([]CommonManager{
@@ -228,7 +246,8 @@ func TestThreeOrgUnits(t *testing.T) {
 	received = makeCommonManagerMap(cm)
 	assert.True(t, reflect.DeepEqual(expected, received), expected, received)
 
-	cm = dir.FindClosestCommonManager("John", "Paul")
+	cm, err = dir.FindClosestCommonManager("John", "Paul")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 
 	expected = makeCommonManagerMap([]CommonManager{

@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/directory/internal/directory"
 	"io/ioutil"
 	"os"
-
-	"github.com/directory/internal"
 )
 
 func main() {
@@ -36,7 +35,7 @@ func main() {
 	defer jsonFile.Close()
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var orgUnit internal.OrgUnit
+	var orgUnit directory.OrgUnit
 
 	err = json.Unmarshal(byteValue, &orgUnit)
 	if err != nil {
@@ -44,11 +43,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	dir := internal.NewDirectory(&orgUnit)
+	dir := directory.NewDirectory(&orgUnit)
 
-	items := dir.FindClosestCommonManager(*employee1, *employee2)
-	if len(items) == 0 {
-		fmt.Fprintf(os.Stderr, "no common manager\n")
+	items, err := dir.FindClosestCommonManager(*employee1, *employee2)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 

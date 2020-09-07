@@ -1,6 +1,8 @@
-package internal
+package directory
 
-import "github.com/satori/go.uuid"
+import (
+	"github.com/satori/go.uuid"
+)
 
 type CommonManager struct {
 	Employee1 string
@@ -9,7 +11,7 @@ type CommonManager struct {
 }
 
 type Directory interface {
-	FindClosestCommonManager(employee1, employee2 string) []CommonManager
+	FindClosestCommonManager(employee1, employee2 string) ([]CommonManager, error)
 }
 
 func NewDirectory(top *OrgUnit) Directory {

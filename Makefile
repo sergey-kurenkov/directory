@@ -6,15 +6,19 @@ build:
 	go build ./cmd/query_dir
 
 test:
-	go test -count=1 ./internal
+	go test -count=1 ./internal/...
 
 testfvr:
-	go test -race -failfast -v -count=1 ./internal
+	go test -race -failfast -v -count=1 ./internal/...
 
 run-linter:
 	golangci-lint run ./internal
 
 demo: build
+	@echo ""
+
+	@echo "Finding a common manager for Vendy and Julia:"
+	@./query_dir -file=./test/test_org2.json -first=Vendy -second=Julia || echo "failure is expected!" 
 	@echo ""
 
 	@echo "Finding a common manager for Ann and Julia:"

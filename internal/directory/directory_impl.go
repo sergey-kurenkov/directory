@@ -1,4 +1,4 @@
-package internal
+package directory
 
 import (
 	"fmt"
@@ -31,9 +31,15 @@ func newDirectory(top *OrgUnit) Directory {
 
 type duplicateKeys = map[string]struct{}
 
-func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2 string) []CommonManager {
-	allEmployees1 := this.findEmployee(employeeName1)
-	allEmployees2 := this.findEmployee(employeeName2)
+func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2 string) ([]CommonManager, error) {
+	allEmployees1, err := this.findEmployee(employeeName1)
+	if err != nil {
+		return nil, err
+	}
+	allEmployees2, err := this.findEmployee(employeeName2)
+	if err != nil {
+		return nil, nil
+	}
 
 	commonManagers := []CommonManager{}
 
@@ -48,7 +54,7 @@ func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2
 		}
 	}
 
-	return commonManagers
+	return commonManagers, nil
 }
 
 type orgUnits []*OrgUnit
@@ -58,7 +64,7 @@ type orgUnit2Traverse struct {
 	parentOrgUnits orgUnits
 }
 
-func (this *directoryImpl) findEmployee(employeeName string) []*foundEmployee {
+func (this *directoryImpl) findEmployee(employeeName string) ([]*foundEmployee, error) {
 	result := []*foundEmployee{}
 	items := []*orgUnit2Traverse{{this.top, orgUnits{}}}
 
@@ -99,7 +105,11 @@ func (this *directoryImpl) findEmployee(employeeName string) []*foundEmployee {
 		}
 	}
 
-	return result
+	if len(result) == 0 {
+		return nil, fmt.Errorf("%w: %v", errNoEmployee, employeeName)
+	}
+
+	return result, nil
 }
 
 func (this *directoryImpl) findCommonManager(e1, e2 *foundEmployee, duplicateKeys duplicateKeys) *CommonManager {
