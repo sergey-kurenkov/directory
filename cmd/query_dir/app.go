@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/directory/internal/directory"
 	"io/ioutil"
 	"os"
+
+	"github.com/directory/internal/directory"
 )
 
 func main() {

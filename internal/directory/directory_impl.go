@@ -36,6 +36,7 @@ func (this *directoryImpl) FindClosestCommonManager(employeeName1, employeeName2
 	if err != nil {
 		return nil, err
 	}
+
 	allEmployees2, err := this.findEmployee(employeeName2)
 	if err != nil {
 		return nil, nil
@@ -94,6 +95,7 @@ func (this *directoryImpl) findEmployee(employeeName string) ([]*foundEmployee, 
 					employeeName:     employeeName,
 					employeeUUID:     employee.UUID,
 				}
+
 				e.managersOrgUnits = append(e.managersOrgUnits, currentItem.parentOrgUnits...)
 				e.ownUnit = append(e.ownUnit, currentItem.parentOrgUnits...)
 				result = append(result, &e)

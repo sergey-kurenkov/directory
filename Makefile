@@ -12,7 +12,7 @@ testfvr:
 	go test -race -failfast -v -count=1 ./internal/...
 
 run-linter:
-	golangci-lint run ./internal
+	golangci-lint run ./internal/...
 
 demo: build
 	@echo ""

@@ -1,20 +1,24 @@
 package directory_test
 
 import (
-	. "github.com/directory/internal/directory"
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	. "github.com/directory/internal/directory"
 
+	"github.com/stretchr/testify/require"
 )
 import "github.com/stretchr/testify/assert"
 
 func TestOnlyCEO(t *testing.T) {
 	dir := NewDirectory(
 		&OrgUnit{
-			Name:    "Bureaucr.at",
-			Manager: Manager{Employee{Name: "Claire"}},
+			Name: "Bureaucr.at",
+			Manager: Manager{
+				Employee: Employee{
+					Name: "Claire",
+				},
+			},
 		})
 	assert.NotNil(t, dir)
 
@@ -52,11 +56,11 @@ func TestTwoOrgUnits(t *testing.T) {
 	dir := NewDirectory(
 		&OrgUnit{
 			Name:    "Bureaucr.at",
-			Manager: Manager{Employee{Name: "Claire"}},
+			Manager: Manager{Employee: Employee{Name: "Claire"}},
 			OrgUnits: []*OrgUnit{
 				{
 					Name:    "department 1",
-					Manager: Manager{Employee{Name: "Bob"}},
+					Manager: Manager{Employee: Employee{Name: "Bob"}},
 					Reports: []*Employee{
 						{Name: "Bill"},
 						{Name: "John"},
@@ -69,7 +73,7 @@ func TestTwoOrgUnits(t *testing.T) {
 				},
 				{
 					Name:    "department 2",
-					Manager: Manager{Employee{Name: "Alice"}},
+					Manager: Manager{Employee: Employee{Name: "Alice"}},
 					Reports: []*Employee{
 						{Name: "Fred"},
 						{Name: "Donald"},
@@ -89,6 +93,7 @@ func TestTwoOrgUnits(t *testing.T) {
 	assert.NotNil(t, dir)
 
 	var cm []CommonManager
+
 	var err error
 
 	cm, err = dir.FindClosestCommonManager("Ann", "Julia")
@@ -168,15 +173,15 @@ func TestThreeOrgUnits(t *testing.T) {
 	dir := NewDirectory(
 		&OrgUnit{
 			Name:    "Bureaucr.at",
-			Manager: Manager{Employee{Name: "Claire"}},
+			Manager: Manager{Employee: Employee{Name: "Claire"}},
 			OrgUnits: []*OrgUnit{
 				{
 					Name:    "department 1",
-					Manager: Manager{Employee{Name: "Bob"}},
+					Manager: Manager{Employee: Employee{Name: "Bob"}},
 					OrgUnits: []*OrgUnit{
 						{
 							Name:    "group 1.1",
-							Manager: Manager{Employee{Name: "Mark"}},
+							Manager: Manager{Employee: Employee{Name: "Mark"}},
 							Reports: []*Employee{
 								{Name: "John"},
 								{Name: "Elsa"},
@@ -184,7 +189,7 @@ func TestThreeOrgUnits(t *testing.T) {
 						},
 						{
 							Name:    "group 1.2",
-							Manager: Manager{Employee{Name: "Paul"}},
+							Manager: Manager{Employee: Employee{Name: "Paul"}},
 							Reports: []*Employee{
 								{Name: "Mike"},
 								{Name: "Bill"},
@@ -194,11 +199,11 @@ func TestThreeOrgUnits(t *testing.T) {
 				},
 				{
 					Name:    "department 2",
-					Manager: Manager{Employee{Name: "Bob"}},
+					Manager: Manager{Employee: Employee{Name: "Bob"}},
 					OrgUnits: []*OrgUnit{
 						{
 							Name:    "group 2.1",
-							Manager: Manager{Employee{Name: "Henry"}},
+							Manager: Manager{Employee: Employee{Name: "Henry"}},
 							Reports: []*Employee{
 								{Name: "Andrew"},
 								{Name: "Fil"},
@@ -206,7 +211,7 @@ func TestThreeOrgUnits(t *testing.T) {
 						},
 						{
 							Name:    "group 2.2",
-							Manager: Manager{Employee{Name: "Joan"}},
+							Manager: Manager{Employee: Employee{Name: "Joan"}},
 							Reports: []*Employee{
 								{Name: "Helmut"},
 								{Name: "Ann"},
@@ -233,7 +238,8 @@ func TestThreeOrgUnits(t *testing.T) {
 	received := makeCommonManagerMap(cm)
 	assert.True(t, reflect.DeepEqual(expected, received), expected, received)
 
-	cm , err= dir.FindClosestCommonManager("John", "Ann")
+	cm, err = dir.FindClosestCommonManager("John", "Ann")
+	require.NoError(t, err)
 	require.Equal(t, 1, len(cm))
 
 	expected = makeCommonManagerMap([]CommonManager{

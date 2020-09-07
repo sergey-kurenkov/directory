@@ -37,6 +37,7 @@ linters:
     - wsl
     - sqlclosecheck
     - godox
+    - testpackage
 
 run:
   timeout: 5m
