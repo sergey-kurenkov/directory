@@ -108,7 +108,7 @@ func (this *directoryImpl) findEmployee(employeeName string) ([]*foundEmployee, 
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("%w: %v", errNoEmployee, employeeName)
+		return nil, fmt.Errorf("%w: %v", ErrNoEmployee, employeeName)
 	}
 
 	return result, nil
